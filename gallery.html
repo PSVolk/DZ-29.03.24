@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Галерея изображений</title>
+  
+  <style>
+    .gallery {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      overflow: hidden;
+    }
+    
+    .image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .toggle-button,
+    .prev-button,
+    .next-button,
+    .slideshow-button {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .toggle-button {
+      top: 10px;
+      right: 10px;
+      background-image: url(значок_развернуть.png);
+      background-size: cover;
+    }
+    
+    .prev-button {
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      background-image: url(значок_предыдущее.png);
+      background-size: cover;
+    }
+    
+    .next-button {
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background-image: url(значок_следующее.png);
+      background-size: cover;
+    }
+    
+    .slideshow-button {
+      bottom: 10px;
+      right: 10px;
+      background-image: url(значок_play.png);
+      background-size: cover;
+    }
+    
+    .expanded {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gallery">
+    <img class="image" src="" alt="">
+    <button class="toggle-button" title="Развернуть/Свернуть галерею"></button>
+    <button class="prev-button" title="Предыдущее изображение"></button>
+    <button class="next-button" title="Следующее изображение"></button>
+    <button class="slideshow-button" title="Запустить/Остановить слайд-шоу"></button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var images = ["https://mobimg.b-cdn.net/v3/fetch/60/60136e84e7fd3ae2eeb153747c92d786.jpeg", "https://s1.1zoom.ru/big3/977/Mountains_Scenery_473520.jpg", "https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666206241_12-mykaleidoscope-ru-p-kartinka-na-zastavku-oboi-12.jpg"]; // Пути к изображениям
+      var currentIndex = 0; // Индекс текущего изображения
+      var timer; // Таймер для слайд-шоу
+      var slideshowActive = false; // Флаг активности слайд-шоу
+      var galleryExpanded = false; // Флаг развернутой галереи
+    
+      // Загрузка первого изображения
+      $(".image").attr("src", images[currentIndex]);
+    
+      // Функция для переключения на следующее изображение
+      function nextImage() {
+        if (currentIndex === images.length - 1) {
+          currentIndex = 0; // Переход к началу галереи
+        } else {
+          currentIndex++; // Переход к следующему изображению
+        }
+        $(".image").attr("src", images[currentIndex]);
+      }
+    
+      // Функция для переключения на предыдущее изображение
+      function prevImage() {
+        if (currentIndex === 0) {
+          currentIndex = images.length - 1; // Переход к концу галереи
+        } else {
+          currentIndex--; // Переход к предыдущему изображению
+        }
+        $(".image").attr("src", images[currentIndex]);
+      }
+    
+      // Обработчик кнопки переключения на следующее изображение
+      $(".next-button").click(function() {
+        nextImage();
+      });
+    
+      // Обработчик кнопки переключения на предыдущее изображение
+      $(".prev-button").click(function() {
+        prevImage();
+      });
+    
+      // Обработчик кнопки запуска/остановки слайд-шоу
+      $(".slideshow-button").click(function() {
+        if (slideshowActive) {
+          clearInterval(timer); // Остановка слайд-шоу
+		  
+          $(".slideshow-button").css("background-image", "url(значок_play.png)");
+        } else {
+          timer = setInterval(nextImage, 3000); // Запуск слайд-шоу с интервалом 3 секунды
+          $(".slideshow-button").css("background-image", "url(значок_stop.png)");
+        }
+        slideshowActive = !slideshowActive; // Изменение флага активности слайд-шоу
+      });
+    
+      // Обработчик кнопки развертывания/сворачивания галереи
+      $(".toggle-button").click(function() {
+        if (galleryExpanded) {
+          $(".gallery").removeClass("expanded");
+          $(".toggle-button").css("background-image", "url(значок_развернуть.png)");
+        } else {
+          $(".gallery").addClass("expanded");
+          $(".toggle-button").css("background-image", "url(значок_свернуть.png)");
+        }
+        galleryExpanded = !galleryExpanded; // Изменение флага развернутости галереи
+      });
+    });
+  </script>
+</body>
+</html>
